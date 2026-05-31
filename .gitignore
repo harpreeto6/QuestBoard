@@ -1,0 +1,22 @@
+# Generated dependencies and build output
+**/node_modules/
+**/target/
+**/dist/
+
+# Local environment files
+**/.env
+**/.env.*
+!**/.env.example
+
+# Logs
+*.log
+
+# Editor and operating system files
+**/.vscode/
+**/.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary generated folders left behind after the monorepo move
+/quest-mcp-server/
+/quest-orchestrator/
