@@ -78,8 +78,12 @@ function createServer(): McpServer {
 }
 
 const PORT = 7070;
+const HOST = '0.0.0.0';
 
-const app = createMcpExpressApp();
+const app = createMcpExpressApp({
+    host: HOST,
+    allowedHosts: ['localhost', '127.0.0.1', 'quest-mcp-server']
+});
 
 app.get('/health', (_req: Request, res: Response) => {
     res.json({ status: 'ok' });
@@ -121,13 +125,13 @@ app.post('/mcp', async (req: Request, res: Response) => {
     }
 });
 
-app.listen(PORT, error => {
+app.listen(PORT, HOST, error => {
     if (error) {
         console.error('Failed to start server:', error);
         process.exit(1);
     }
 
-    console.log(`Quest MCP server listening on http://localhost:${PORT}`);
+    console.log(`Quest MCP server listening on http://${HOST}:${PORT}`);
     console.log(`Health check: http://localhost:${PORT}/health`);
     console.log(`MCP endpoint: http://localhost:${PORT}/mcp`);
 });

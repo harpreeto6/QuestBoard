@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -22,12 +23,13 @@ import quest_orchestrator.model.QuestResponse;
 public class McpClient {
 
     private static final Logger logger = LoggerFactory.getLogger(McpClient.class);
-    private static final String MCP_URL = "http://localhost:7070/mcp";
 
+    private final String mcpServerUrl;
     private final RestClient restClient;
     private final JsonMapper jsonMapper;
 
-    public McpClient() {
+    public McpClient(@Value("${mcp.server.url}") String mcpServerUrl) {
+        this.mcpServerUrl = mcpServerUrl;
         this.restClient = RestClient.create();
         this.jsonMapper = JsonMapper.builder().build();
     }
@@ -47,10 +49,10 @@ public class McpClient {
                 )
         );
 
-        logger.info("Calling MCP server at {}", MCP_URL);
+        logger.info("Calling MCP server at {}", mcpServerUrl);
 
         byte[] responseBody = restClient.post()
-                .uri(MCP_URL)
+                .uri(mcpServerUrl)
                 .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_EVENT_STREAM)
                 .body(mcpRequest)
                 .retrieve()

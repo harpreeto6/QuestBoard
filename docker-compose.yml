@@ -1,1 +1,29 @@
-services: {}
+services:
+  quest-mcp-server:
+    build:
+      context: ./apps/quest-mcp-server
+    container_name: questboard-mcp-server
+    ports:
+      - "7070:7070"
+
+  orchestrator:
+    build:
+      context: ./apps/orchestrator
+    container_name: questboard-orchestrator
+    ports:
+      - "8080:8080"
+    environment:
+      MCP_SERVER_URL: http://quest-mcp-server:7070/mcp
+    depends_on:
+      - quest-mcp-server
+
+  frontend:
+    build:
+      context: ./apps/frontend
+    container_name: questboard-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080
+    depends_on:
+      - orchestrator
